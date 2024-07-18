@@ -4,7 +4,7 @@
       expression_result: {
         width: 'spread',
         end: ['parent', 'end'],
-        top: ['parent', 'bottom', 64]
+        top: ['parent', 'top', 64]
       },
       button_grid: {
         visibility: 'visible',
@@ -19,7 +19,7 @@
       expression_result: {
         width: 'spread',
         end: ['parent', 'end'],
-        top: ['parent', 'bottom', 16]
+        top: ['parent', 'top', 64]
       },
       button_grid: {
         visibility: 'gone',

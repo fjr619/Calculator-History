@@ -32,12 +32,12 @@ fun MainContent(
 
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000)
-            focusManager.clearFocus()
-        }
-    }
+//    LaunchedEffect(Unit) {
+//        while (true) {
+//            delay(100)
+//            focusManager.clearFocus()
+//        }
+//    }
 
     val motionScene = remember {
         context.resources

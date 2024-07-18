@@ -41,27 +41,27 @@ fun ExpressionContent(
 
     val customTextSelectionColors = TextSelectionColors(
         handleColor = Color.Transparent,
-        backgroundColor = Color.LightGray
+        backgroundColor = Color.Transparent
     )
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(Constant.EXPRESSION_RESULT_HEIGHT),
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = modifier.padding(end = 24.dp),
+            modifier = Modifier.padding(end = 24.dp),
             horizontalAlignment = Alignment.End
         ) {
             CompositionLocalProvider(
                 LocalTextSelectionColors provides customTextSelectionColors,
-                LocalTextInputService provides null //TODO
+//                LocalTextInputService provides null //TODO
             ) {
                 //todo change to state alias BasicTextField2 refer to Runtracker
                 BasicTextField(
                     value = currentExpression,
-                    onValueChange = updateTextFieldValue,
+                    onValueChange = {},
                     textStyle = TextStyle(
                         letterSpacing = 2.sp,
                         fontSize = 24.sp,
@@ -73,12 +73,12 @@ fun ExpressionContent(
                         reverseScrolling = true,
                     ),
                     maxLines = 1,
-                    cursorBrush = SolidColor(Color.Cyan),
-                    readOnly = false
+                    cursorBrush = SolidColor(Color.Transparent),
+                    readOnly = true
                 )
             }
 
-            AnimatedVisibility(visible = fraction < 0.8f) {
+            AnimatedVisibility(visible = fraction <= 0.8f) {
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
@@ -87,7 +87,7 @@ fun ExpressionContent(
                 style = TextStyle(
                     fontSize = 28.sp,
                     textAlign = TextAlign.End,
-                    color = Color.Cyan
+                    color = MaterialTheme.colorScheme.primary
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.End,
