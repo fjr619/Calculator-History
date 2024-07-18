@@ -10,6 +10,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import org.koin.androidx.compose.KoinAndroidContext
+import org.koin.core.annotation.KoinExperimentalAPI
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -72,6 +74,7 @@ private val darkScheme = darkColorScheme(
     inverseOnSurface = inverseOnSurfaceDark,
     inversePrimary = inversePrimaryDark,
 )
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun CalculatorHistoryTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -92,6 +95,10 @@ fun CalculatorHistoryTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = {
+            KoinAndroidContext {
+                content()
+            }
+        }
     )
 }
