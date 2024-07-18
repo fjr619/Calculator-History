@@ -2,9 +2,11 @@ package com.fjr619.calculatorhistory.ui.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
@@ -22,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fjr619.calculatorhistory.core.extension.currentFraction
 import com.fjr619.calculatorhistory.ui.screens.components.MainContent
 import com.fjr619.calculatorhistory.ui.screens.components.SheetContent
 import kotlinx.coroutines.launch
@@ -42,6 +45,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         scaffoldState = scaffoldState,
         content = {
             MainContent(
+                modifier = Modifier,
+                fraction = scaffoldState.currentFraction,
                 homeState = homeState,
                 onAction = viewModel::onAction
             )
@@ -55,7 +60,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 fun BottomSheet(
     modifier: Modifier = Modifier,
     scaffoldState: BottomSheetScaffoldState,
-    content: @Composable () -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -84,7 +89,7 @@ fun BottomSheet(
                 )
             }
         },
-    ) {
-        content.invoke()
+    ) { paddingValues ->
+        content(paddingValues)
     }
 }
