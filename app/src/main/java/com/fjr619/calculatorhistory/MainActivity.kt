@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
             CalculatorHistoryTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
                 ) {
                     HomeScreen()
                 }

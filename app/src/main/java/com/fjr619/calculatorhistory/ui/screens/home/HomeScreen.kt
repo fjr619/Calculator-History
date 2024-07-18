@@ -1,51 +1,56 @@
 package com.fjr619.calculatorhistory.ui.screens.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fjr619.calculatorhistory.ui.screens.components.MainContent
 import com.fjr619.calculatorhistory.ui.screens.components.SheetContent
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
 
+    val viewModel: HomeViewModel = koinViewModel()
+    val homeState by viewModel.state.collectAsStateWithLifecycle()
 
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.PartiallyExpanded,
-            skipHiddenState = false,
-        )
+    val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )
 
     BottomSheet(
         scaffoldState = scaffoldState,
         content = {
-            MainContent()
+            MainContent(
+                homeState = homeState,
+                onAction = viewModel::onAction
+            )
         }
     )
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheet(
     modifier: Modifier = Modifier,
@@ -54,45 +59,26 @@ fun BottomSheet(
 ) {
     val scope = rememberCoroutineScope()
 
-    val isExpanded by remember {
-        derivedStateOf {
-            scaffoldState.bottomSheetState.targetValue == SheetValue.Expanded
-        }
-    }
-
-    LaunchedEffect(scaffoldState.bottomSheetState.targetValue) {
-
-        //prevent to hide bottom sheet
-        if (scaffoldState.bottomSheetState.targetValue == SheetValue.Hidden) {
-            scope.launch {
-                scaffoldState.bottomSheetState.partialExpand()
-            }
-        }
-    }
-
     BottomSheetScaffold(
         modifier = modifier
             .systemBarsPadding()
             .fillMaxSize(),
         scaffoldState = scaffoldState,
-        sheetContainerColor = MaterialTheme.colorScheme.onBackground,
-        sheetDragHandle = {
-            BottomSheetDefaults.DragHandle(
-                color = MaterialTheme.colorScheme.background
-            )
-        },
+        sheetBackgroundColor = MaterialTheme.colorScheme.background,
+        backgroundColor = MaterialTheme.colorScheme.background,
         sheetContent = {
             Box(
                 modifier = Modifier
-//                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                     .fillMaxWidth()
                     .fillMaxHeight(0.76f)
+                    .background(MaterialTheme.colorScheme.onBackground)
             ) {
                 SheetContent(
-                    isExpanded = isExpanded,
+                    isExpanded = scaffoldState.bottomSheetState.isExpanded,
                     onBack = {
                         scope.launch {
-                            scaffoldState.bottomSheetState.partialExpand()
+                            scaffoldState.bottomSheetState.collapse()
                         }
                     }
                 )

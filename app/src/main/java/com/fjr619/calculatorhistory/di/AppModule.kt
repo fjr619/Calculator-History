@@ -12,7 +12,7 @@ class DataModule
 class DomainModule
 
 @Module
-@ComponentScan(value = "com.fjr619.calculatorhistory.presentation")
+@ComponentScan(value = "com.fjr619.calculatorhistory.ui")
 class PresentationModule
 
 @Module(includes = [DataModule::class, DomainModule::class, PresentationModule::class])
