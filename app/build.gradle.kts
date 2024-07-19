@@ -116,6 +116,5 @@ dependencies {
 
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
     implementation ("org.mariuszgromada.math:MathParser.org-mXparser:6.0.0")
-
-
+    implementation("com.notkamui.libs:keval:1.1.1")
 }

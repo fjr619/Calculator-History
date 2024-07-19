@@ -96,7 +96,6 @@ class HomeViewModel(
     }
 
     private fun addActionValueToExpression(symbol: String) {
-        println("addActionValueToExpression")
         val currentExpression = state.value.currentExpression
         val newCursorPosition = currentExpression.selection.start + symbol.length
         val newExpression = expressionUtil.addActionValueToExpression(
@@ -114,7 +113,6 @@ class HomeViewModel(
     }
 
     private fun calculateExpression(expression: TextFieldValue) {
-        println("calculateExpression")
         val result = expressionUtil.calculateExpression(
             getConvertedExpression(expression.text)
         )
@@ -137,7 +135,6 @@ class HomeViewModel(
         currentExpression: TextFieldValue,
         result: String
     ) {
-        println("updateState")
         _state.update {
             it.copy(
                 currentExpression = currentExpression,

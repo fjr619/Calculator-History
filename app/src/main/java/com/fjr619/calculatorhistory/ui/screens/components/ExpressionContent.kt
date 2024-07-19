@@ -85,7 +85,7 @@ fun ExpressionContent(
             Text(
                 text = result,
                 style = TextStyle(
-                    fontSize = 28.sp,
+                    fontSize = 34.sp,
                     textAlign = TextAlign.End,
                     color = MaterialTheme.colorScheme.primary
                 ),

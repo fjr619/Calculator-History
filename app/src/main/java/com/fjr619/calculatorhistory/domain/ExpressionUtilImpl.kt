@@ -1,5 +1,6 @@
 package com.fjr619.calculatorhistory.domain
 
+import com.notkamui.keval.keval
 import org.koin.core.annotation.Single
 import org.mariuszgromada.math.mxparser.Expression
 import java.text.DecimalFormat
@@ -25,7 +26,7 @@ class ExpressionUtilImpl(): ExpressionUtil {
 
     override fun calculateExpression(expression: String): String {
         return try {
-            val result = Expression(expression).calculate()
+            val result = expression.keval()
             if (result.isNaN()) "" else DecimalFormat("#,###.##").format(result)
         } catch (e: Exception) {
             ""
