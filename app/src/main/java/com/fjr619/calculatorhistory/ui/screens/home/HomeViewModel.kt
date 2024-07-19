@@ -18,7 +18,7 @@ data class HomeState(
 
 sealed interface HomeAction {
     data class OnButtonActionClick(val symbol: String) : HomeAction
-    data class UpdateTextFieldValue(val value: TextFieldValue) : HomeAction
+    data class UpdateTextFieldValue(val expression: String) : HomeAction
 }
 
 @KoinViewModel
@@ -32,7 +32,7 @@ class HomeViewModel(
     fun onAction(action: HomeAction) {
         when (action) {
             is HomeAction.OnButtonActionClick -> processExpression(action.symbol)
-            is HomeAction.UpdateTextFieldValue -> updateTextFieldValue(action.value)
+            is HomeAction.UpdateTextFieldValue -> updateTextFieldValue(TextFieldValue(action.expression))
         }
     }
 

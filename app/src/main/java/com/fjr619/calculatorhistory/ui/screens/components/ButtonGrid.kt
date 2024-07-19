@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -71,14 +73,9 @@ private fun ButtonComponent(
     modifier: Modifier = Modifier,
     onClick: (symbol: String) -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .clip(CircleShape)
-            .background(buttonBackgroundColor(symbol))
-            .then(modifier)
-            .clickable { onClick(symbol) },
-        contentAlignment = Alignment.Center
-    ) {
+    FilledIconButton(modifier = modifier, onClick = {onClick(symbol) }, colors = IconButtonDefaults.iconButtonColors(
+        containerColor = buttonBackgroundColor(symbol)
+    )) {
         Text(
             text = symbol,
             fontSize = buttonFontSize(symbol),

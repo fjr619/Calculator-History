@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,7 +36,6 @@ fun ExpressionContent(
     currentExpression: TextFieldValue,
     fraction: Float,
     result: String,
-    updateTextFieldValue: (value: TextFieldValue) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -64,7 +64,7 @@ fun ExpressionContent(
                     onValueChange = {},
                     textStyle = TextStyle(
                         letterSpacing = 2.sp,
-                        fontSize = 24.sp,
+                        fontSize = 30.sp,
                         textAlign = TextAlign.End,
                         color = MaterialTheme.colorScheme.onSurface
                     ),
@@ -85,9 +85,10 @@ fun ExpressionContent(
             Text(
                 text = result,
                 style = TextStyle(
-                    fontSize = 34.sp,
+                    fontSize = 40.sp,
                     textAlign = TextAlign.End,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.End,

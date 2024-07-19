@@ -1,14 +1,11 @@
-package com.fjr619.calculatorhistory.ui.screens.components
+package com.fjr619.calculatorhistory.ui.screens.main
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
@@ -17,27 +14,21 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import com.fjr619.calculatorhistory.R
+import com.fjr619.calculatorhistory.ui.screens.components.ButtonGrid
+import com.fjr619.calculatorhistory.ui.screens.components.ExpressionContent
+import com.fjr619.calculatorhistory.ui.screens.history.HistoryAction
 import com.fjr619.calculatorhistory.ui.screens.home.HomeAction
 import com.fjr619.calculatorhistory.ui.screens.home.HomeState
-import kotlinx.coroutines.delay
 
 @Composable
 fun MainContent(
     modifier: Modifier,
     homeState: HomeState,
     fraction: Float,
-    onAction: (action: HomeAction) -> Unit
+    homeAction: (action: HomeAction) -> Unit,
+    historyAction: (action: HistoryAction) -> Unit
 ) {
     val context = LocalContext.current
-
-    val focusManager = LocalFocusManager.current
-
-//    LaunchedEffect(Unit) {
-//        while (true) {
-//            delay(100)
-//            focusManager.clearFocus()
-//        }
-//    }
 
     val motionScene = remember {
         context.resources
@@ -62,9 +53,6 @@ fun MainContent(
                 fraction = fraction,
                 currentExpression = homeState.currentExpression,
                 result = homeState.result,
-                updateTextFieldValue = { value: TextFieldValue ->
-                    onAction(HomeAction.UpdateTextFieldValue(value))
-                },
             )
             ButtonGrid(
                 modifier = Modifier
@@ -72,10 +60,15 @@ fun MainContent(
                     .fillMaxWidth(),
                 onActionClick = { symbol ->
                     if (symbol == "=" && homeState.currentExpression.text.isEmpty()) return@ButtonGrid
-                    onAction(HomeAction.OnButtonActionClick(symbol))
+                    homeAction(HomeAction.OnButtonActionClick(symbol))
 
                     if (symbol == "=" && !(homeState.result == "" || homeState.result == "NaN")) {
-                        Toast.makeText(context, "Saved in History", Toast.LENGTH_SHORT).show()
+                        historyAction(HistoryAction.Insert(
+                            expression = homeState.currentExpression.text,
+                            result = homeState.result
+                        ))
+
+                        Toast.makeText(context, "Saved in History ${homeState.result}", Toast.LENGTH_SHORT).show()
                     }
                 }
             )

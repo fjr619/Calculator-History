@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
@@ -21,12 +20,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fjr619.calculatorhistory.core.extension.currentFraction
-import com.fjr619.calculatorhistory.ui.screens.components.MainContent
-import com.fjr619.calculatorhistory.ui.screens.components.SheetContent
+import com.fjr619.calculatorhistory.ui.screens.history.HistoryAction
+import com.fjr619.calculatorhistory.ui.screens.history.HistoryState
+import com.fjr619.calculatorhistory.ui.screens.history.HistoryViewModel
+import com.fjr619.calculatorhistory.ui.screens.main.MainContent
+import com.fjr619.calculatorhistory.ui.screens.history.SheetContent
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,7 +36,9 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(modifier: Modifier = Modifier) {
 
     val viewModel: HomeViewModel = koinViewModel()
+    val historyViewModel: HistoryViewModel = koinViewModel()
     val homeState by viewModel.state.collectAsStateWithLifecycle()
+    val historyState by historyViewModel.state.collectAsStateWithLifecycle()
 
     val scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
@@ -43,14 +46,18 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
     BottomSheet(
         scaffoldState = scaffoldState,
+        historyState = historyState,
         content = {
             MainContent(
                 modifier = Modifier,
                 fraction = scaffoldState.currentFraction,
                 homeState = homeState,
-                onAction = viewModel::onAction
+                homeAction = viewModel::onAction,
+                historyAction = historyViewModel::onAction
             )
-        }
+        },
+        onHistoryAction = historyViewModel::onAction,
+        homeAction = viewModel::onAction,
     )
 
 }
@@ -60,6 +67,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 fun BottomSheet(
     modifier: Modifier = Modifier,
     scaffoldState: BottomSheetScaffoldState,
+    historyState: HistoryState,
+    homeAction: (HomeAction) -> Unit,
+    onHistoryAction: (HistoryAction) -> Unit,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -80,11 +90,18 @@ fun BottomSheet(
                     .background(MaterialTheme.colorScheme.onBackground)
             ) {
                 SheetContent(
+                    historyState = historyState,
                     isExpanded = scaffoldState.bottomSheetState.isExpanded,
+                    onClearHistoryClicked = {
+                        onHistoryAction(HistoryAction.DeleteAll)
+                    },
                     onBack = {
                         scope.launch {
                             scaffoldState.bottomSheetState.collapse()
                         }
+                    },
+                    onHistoryItemClicked = { calculation ->
+                        homeAction(HomeAction.UpdateTextFieldValue(calculation.expression))
                     }
                 )
             }
